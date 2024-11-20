@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 22:43:27 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/20 00:32:17 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/20 22:07:46 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ void	clean_exit(int error, t_table *table)
 	/************What needs to be freed/destroyed***************/
 	//
 	//
+	table->forks = NULL;
 	/***********************************************************/
+	
 	if (error == PARSING_ERROR)
 	{
 		printf("%s", BAD_INPUT);
@@ -44,10 +46,13 @@ void	init_input(int ac, char **av, t_table *table)
 void	init_table(t_table *table)
 {
 	table->num_philos = 0;
-	table->num_servings = -1;
 	table->time_to_die = 0;
 	table->time_to_eat = 0;
 	table->time_to_sleep = 0;
+	table->num_servings = -1;
+	table->philo = NULL;
+	table->forks = NULL;
+	table->meals_eaten = 0;
 }
 
 int	main(int ac, char **av)
@@ -56,6 +61,7 @@ int	main(int ac, char **av)
 
 	init_table(&table);
 	init_input(ac, av, &table);
-
+	
+	// initialize philos and forks and mutexes: print, meals, escape
 	return (0);
 }

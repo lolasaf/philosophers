@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 22:43:16 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/20 00:36:31 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/20 22:11:17 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,25 @@ struct	s_table
 	t_philo	**philo;
 	t_mutex	**forks;
 	int		meals_eaten;
+	int		escape;
+	t_mutex	mtx_print;
+	t_mutex	mtx_meals;
+	t_mutex mtx_escape;
 };
 
 struct s_philo
 {
-	int	id;
-	int	num_philos;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	num_servings;
+	int			id;
+	pthread_t	thread_id;
+	t_table	 	*table;
+	int			num_philos;
+	int			time_to_die;
+	int			time_to_eat;
+	int			time_to_sleep;
+	int			num_servings;
+	int			meals_eaten;
+	t_mutex		*left_fork;
+	t_mutex		*right_fork;
 };
 
 void	init_input(int ac, char **av, t_table *table);
