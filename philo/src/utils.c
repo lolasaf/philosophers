@@ -6,13 +6,13 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 23:33:13 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/20 00:07:34 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/23 22:28:52 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_spatoi(const char *nptr, t_table *table)
+int	ft_spatoi(const char *nptr)
 {
 	size_t			i;
 	long int		sign;
@@ -36,6 +36,56 @@ int	ft_spatoi(const char *nptr, t_table *table)
 		i++;
 	}
 	if (nptr[i] || sign < 0 || res > __INT_MAX__)
-		clean_exit(PARSING_ERROR, table);
+		return (printf("%s", BAD_INPUT), -1);
 	return (res * sign);
+}
+
+void	clean_table(t_table *table)
+{
+	int i;
+	
+	// free forks
+	if (table->forks)
+	{
+		i = 0;
+		while (i < table->num_philos)
+			pthread_mutex_destroy(table->forks[i++]);
+		i = 0;
+		while (i < table->num_philos)
+		{
+			if (table->forks[i])
+				free(table->forks[i]);
+			i++;
+		}
+		free(table->forks);
+	}
+
+	// free philos
+	if (table->philo)
+	{
+		i = 0;
+		while (i < table->num_philos)
+		{
+			if (table->philo[i])
+				free(table->philo[i]);
+			i++;
+		}
+		free(table->philo);
+	}
+
+	// destroy mutexes
+	pthread_mutex_destroy(&(table->mtx_escape));
+	pthread_mutex_destroy(&(table->mtx_meals));
+	pthread_mutex_destroy(&(table->mtx_print));
+}
+
+long	timestamp(void)
+{
+	struct timeval	tp;
+	long			current_time_ms;
+
+	if (gettimeofday(&tp, NULL))
+		// error handle
+	current_time_ms = tp.tv_sec * 1000 + tp.tv_usec / 1000;
+	return (current_time_ms);
 }
