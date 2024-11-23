@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 22:43:27 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/20 22:07:46 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/23 01:13:14 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,27 +41,74 @@ void	init_input(int ac, char **av, t_table *table)
 		clean_exit(PARSING_ERROR, table);
 	if (ac == 6)
 		table->num_servings = ft_spatoi(av[5], table);
+	else
+		table->num_philos = -1;
+}
+
+void	*routine()
+{
+	usleep(2);
+}
+
+void	init_philos(t_table *table)
+{
+	int i = 0;
+
+	table->philo = malloc(sizeof(t_philo *) * table->num_philos);
+	if (!table->philo)
+		// malloc error
+	while (i < table->num_philos)
+	{
+		table->philo[i]->id = i;
+		table->philo[i]->meals_eaten = 0;
+		table->philo[i]->num_philos = table->num_philos;
+		table->philo[i]->num_servings = table->num_servings;
+		table->philo[i]->table = table;
+		table->philo[i]->time_to_die = table->time_to_die;
+		table->philo[i]->time_to_eat = table->time_to_eat;
+		table->philo[i]->time_to_sleep = table->time_to_sleep;
+		//table->philo[i]->left_fork = ;
+		//table->philo[i]->right_fork = ;
+		if (pthread_create(table->philo[i]->thread_id, NULL, &routine, NULL))
+			// error
+		
+		i++;
+	}
+}
+
+void	init_forks(t_table *table)
+{
+	int i = 0;
+
+	table->forks = malloc(sizeof(t_mutex *) * table->num_philos);
+	if (!table->forks)
+		// malloc error
+	while (i < table->num_philos)
+	{
+		table->forks[i] = malloc(sizeof(t_mutex));
+		if (!table->forks[i])
+			// malloc error
+		if (pthread_mutex_init(&(table->forks[i]), NULL))
+			// mutex error
+		i++;
+	}	
 }
 
 void	init_table(t_table *table)
 {
-	table->num_philos = 0;
-	table->time_to_die = 0;
-	table->time_to_eat = 0;
-	table->time_to_sleep = 0;
-	table->num_servings = -1;
-	table->philo = NULL;
-	table->forks = NULL;
-	table->meals_eaten = 0;
+	init_forks(&table);
+	init_philos(&table);
 }
 
 int	main(int ac, char **av)
 {
 	t_table	table;
 
-	init_table(&table);
 	init_input(ac, av, &table);
-	
+	init_table(&table);
+
 	// initialize philos and forks and mutexes: print, meals, escape
+
+	// destroy mutex
 	return (0);
 }
