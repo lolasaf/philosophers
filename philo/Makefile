@@ -6,7 +6,7 @@
 #    By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/19 22:34:00 by wel-safa          #+#    #+#              #
-#    Updated: 2024/11/23 18:10:19 by wel-safa         ###   ########.fr        #
+#    Updated: 2024/11/25 23:33:11 by wel-safa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ INCDIR := inc
 OBJDIR := obj
 
 #--- SOURCES ---
-SRCS := $(addprefix $(SRCDIR)/, $(addsuffix .c, main init matrix utils))
+SRCS := $(addprefix $(SRCDIR)/, $(addsuffix .c, main init matrix utils mutex))
 
 #--- OBJECTS ---
 OBJS := $(addprefix $(OBJDIR)/, $(notdir $(SRCS:.c=.o)))

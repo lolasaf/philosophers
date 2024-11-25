@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 16:29:41 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/23 21:14:15 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/25 20:26:26 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ It also checks for parsing errors*/
 void	init_input(int ac, char **av, t_table *table)
 {
 	if (ac < 5 || ac > 6)
-		return(printf("%s", BAD_INPUT), exit(1));
+		return(printf("%s", BAD_INPUT), exit(EXIT_FAILURE));
 	table->num_philos = ft_spatoi(av[1]);
 	table->time_to_die = ft_spatoi(av[2]);
 	table->time_to_eat = ft_spatoi(av[3]);
@@ -45,6 +45,8 @@ void	init_input(int ac, char **av, t_table *table)
 void	init_table(t_table *table)
 {
 	table->escape = 0;
+	table->meals = 0;
+	
 	pthread_mutex_init(&(table->mtx_escape), NULL);
 	pthread_mutex_init(&(table->mtx_meals), NULL);
 	pthread_mutex_init(&(table->mtx_print), NULL);
@@ -61,14 +63,14 @@ void	init_forks(t_table *table)
 
 	table->forks = malloc(sizeof(t_mutex *) * table->num_philos);
 	if (!table->forks)
-		return(printf("%s", MALLOC_FAIL), escape_the_matrix(table));
+		return(printf("%s", MALLOC_FAIL), clean_table(table), exit(1));
 	while (i < table->num_philos)
 	{
 		table->forks[i] = malloc(sizeof(t_mutex));
 		if (!table->forks[i])
-			return(printf("%s", MALLOC_FAIL), escape_the_matrix(table));
+			return(printf("%s", MALLOC_FAIL), clean_table(table), exit(1));
 		if (pthread_mutex_init(table->forks[i], NULL))
-			return(printf("%s", MUTEX_FAIL), escape_the_matrix(table));
+			return(printf("%s", MALLOC_FAIL), clean_table(table), exit(1));
 		i++;
 	}	
 }
@@ -81,12 +83,12 @@ void	init_philos(t_table *table)
 
 	table->philo = malloc(sizeof(t_philo *) * table->num_philos);
 	if (!table->philo)
-		return(printf("%s\n", MALLOC_FAIL), escape_the_matrix(table));
+		return(printf("%s\n", MALLOC_FAIL), clean_table(table), exit(1));
 	while (i < table->num_philos)
 	{
 		table->philo[i] = malloc(sizeof(t_philo));
 		if (!table->philo[i])
-			return(printf("%s\n", MALLOC_FAIL), escape_the_matrix(table));
+			return(printf("%s\n", MALLOC_FAIL), clean_table(table), exit(1));
 		table->philo[i]->id = i + 1;
 		table->philo[i]->meals = 0;
 		table->philo[i]->num_philos = table->num_philos;
