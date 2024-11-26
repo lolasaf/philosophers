@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 16:29:41 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/26 22:43:53 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/26 23:48:36 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	init_input(int ac, char **av, t_table *table)
 		table->max_meals = ft_spatoi(av[5]);
 	else
 		table->max_meals = __INT_MAX__;
+	if (table->max_meals < 0)
+		return (printf("%s", BAD_INPUT), exit(EXIT_FAILURE));
 }
 
 /*initialize the table*/

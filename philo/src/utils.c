@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 23:33:13 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/26 23:21:37 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/26 23:30:50 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_spatoi(const char *nptr)
 		i++;
 	}
 	if (nptr[i] || sign < 0 || res > __INT_MAX__)
-		return (printf("%s", BAD_INPUT), -1);
+		return (-1);
 	return (res * sign);
 }
 
