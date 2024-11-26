@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 22:43:16 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/26 18:58:04 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/26 23:19:31 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ struct s_philo
 {
 	int			id;
 	pthread_t	thread_id;
-	t_table	 	*table;
+	t_table		*table;
 	long		start_time;
 	int			num_philos;
 	int			time_to_die;
@@ -85,6 +85,7 @@ void	run_matrix(t_table *table);
 void	eat_sleep_think(t_philo *philo);
 void	*routine(void *philo_ptr);
 void	*monitor_routine(void *table_ptr);
+void	eat(t_philo *philo);
 
 // utils.c
 int		ft_spatoi(const char *nptr);
@@ -92,9 +93,12 @@ void	clean_table(t_table *table);
 long	timestamp(t_table *table);
 long	matrix_time(t_philo *philo);
 
-// mutex.c
+// escape.c
 void	escape_the_matrix(t_table *table);
 int		_is_escape(t_table *table);
+void	escape_one(t_philo *philo);
+
+// mutex.c
 int		_meals_eaten(t_table *table);
 long	_last_meal(t_philo *philo);
 void	m_print(t_philo *philo, int action);

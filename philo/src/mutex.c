@@ -6,28 +6,11 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 19:30:15 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/26 18:44:55 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/26 21:35:15 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	escape_the_matrix(t_table *table)
-{
-	pthread_mutex_lock(&table->mtx_escape);
-	table->escape = 1;
-	pthread_mutex_unlock(&table->mtx_escape);
-}
-
-int	_is_escape(t_table *table)
-{
-	int value;
-
-	pthread_mutex_lock(&table->mtx_escape);
-	value = table->escape;
-	pthread_mutex_unlock(&table->mtx_escape);
-	return (value);
-}
 
 int	_meals_eaten(t_table *table)
 {
@@ -41,11 +24,11 @@ int	_meals_eaten(t_table *table)
 
 int	check_max_meals(t_table *table)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	pthread_mutex_lock(&table->mtx_meals);
-	while(++i < table->num_philos)
+	while (++i < table->num_philos)
 	{
 		if (table->philo[i]->meals < table->max_meals)
 			return (pthread_mutex_unlock(&table->mtx_meals), 0);
@@ -56,7 +39,7 @@ int	check_max_meals(t_table *table)
 
 long	_last_meal(t_philo *philo)
 {
-	long last_meal;
+	long	last_meal;
 
 	pthread_mutex_lock(&philo->table->mtx_meals);
 	last_meal = philo->last_meal_time;
