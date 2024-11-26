@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 22:43:16 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/25 23:32:04 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/26 18:58:04 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,6 @@ int		_is_escape(t_table *table);
 int		_meals_eaten(t_table *table);
 long	_last_meal(t_philo *philo);
 void	m_print(t_philo *philo, int action);
+int		check_max_meals(t_table *table);
 
 #endif

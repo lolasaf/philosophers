@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 23:33:13 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/25 23:41:03 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/26 17:13:35 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	clean_table(t_table *table)
 	pthread_mutex_destroy(&(table->mtx_print));
 }
 
-long	timestamp(t_table *table)
+long 	timestamp(t_table *table)
 {
 	struct timeval	tp;
 	long			current_time_ms;

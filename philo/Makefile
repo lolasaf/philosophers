@@ -6,7 +6,7 @@
 #    By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/19 22:34:00 by wel-safa          #+#    #+#              #
-#    Updated: 2024/11/25 23:33:11 by wel-safa         ###   ########.fr        #
+#    Updated: 2024/11/26 19:40:34 by wel-safa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ HEADERS := $(addprefix $(INCDIR)/, philo.h)
 
 #--- FLAGS ---
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -I$(INCDIR) -g -pthread
+CFLAGS := -Wall -Wextra -Werror -I$(INCDIR) -g -pthread -fsanitize=thread
 
 .PHONY: all clean fclean re
 

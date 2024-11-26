@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 22:03:01 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/25 23:32:44 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:10:05 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,18 @@
 void	eat_sleep_think(t_philo *philo)
 {
 	pthread_mutex_lock(philo->right_fork);
-	m_print(philo, FORKING);
 	pthread_mutex_lock(philo->left_fork);
+	m_print(philo, FORKING);
 	m_print(philo, FORKING);
 	m_print(philo, EATING);
 	pthread_mutex_lock(&philo->table->mtx_meals);
 	philo->last_meal_time = timestamp(philo->table);
-	philo->table->meals++;
 	pthread_mutex_unlock(&philo->table->mtx_meals);
-	usleep(philo->time_to_sleep * 1000);
+	usleep(philo->time_to_eat * 1000);
+	pthread_mutex_lock(&philo->table->mtx_meals);
+	philo->table->meals++;
 	philo->meals++;
+	pthread_mutex_unlock(&philo->table->mtx_meals);
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
 	m_print(philo, SLEEPING);
@@ -56,6 +58,17 @@ void	eat_sleep_think(t_philo *philo)
 	m_print(philo, THINKING);
 }
 
+void	routine_one(t_philo *philo)
+{
+	m_print(philo, FORKING);
+	usleep(philo->time_to_die * 1000);
+}
+
+// 1 2 3 4 5
+// plates = 2
+// Round 1: 1, 3.
+// Round 2: 2, 4.
+// Round 3: 3, 5.
 void	*routine(void *philo_ptr)
 {
 	int	plates;
@@ -65,20 +78,24 @@ void	*routine(void *philo_ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *)philo_ptr;
-	while(!(_is_escape(philo->table)) && philo->meals < philo->max_meals)
+	if (philo->num_philos == 1)
+		return (routine_one(philo), NULL);
+	while(!_is_escape(philo->table))
 	{
 		plates = philo->num_philos / 2;
 		round = _meals_eaten(philo->table) / plates + 1;
 		start_id = round % philo->num_philos;
 		diff = (philo->id - start_id + philo->num_philos) % philo->num_philos;
-		if (((diff % 2) == 0) && (diff < (plates - 1) * 2))
+		if (((diff % 2) == 0) && (diff <= ((plates - 1) * 2)))
 			eat_sleep_think(philo);
 		usleep(500);
+		//printf("AM I STUCK HERE!?\n");
 	}
 	escape_the_matrix(philo->table);
 	return (NULL);
 }
 
+// Loop through Philo id's and check for death!
 void	*monitor_routine(void *table_ptr)
 {
 	int		i;
@@ -88,7 +105,6 @@ void	*monitor_routine(void *table_ptr)
 	table = (t_table *)table_ptr;
 	while(1)
 	{
-		// loop through philo Ids and check for death!!!
 		i = 0;
 		while (i < table->num_philos)
 		{
@@ -96,8 +112,14 @@ void	*monitor_routine(void *table_ptr)
 					- _last_meal(table->philo[i]) >= table->time_to_die)
 			{
 				m_print(table->philo[i], DYING);
+				//printf("Escape_the_matrix at monitor routine at philo id %d\n", table->philo[i]->id);
 				escape_the_matrix(table);
 				return (NULL);
+			}
+			if (check_max_meals(table))
+			{
+				escape_the_matrix(table);
+				return(NULL);
 			}
 		}
 		usleep(500);
@@ -109,22 +131,21 @@ void	run_matrix(t_table *table)
 	int	i;
 
 	i = 0;
-	table->start_time = timestamp(table);
-	if (pthread_create(&table->monitor_id, NULL, &monitor_routine, table))
+	if (pthread_create(&table->monitor_id, NULL, monitor_routine, table))
 		return (printf("%s\n", THREAD_FAIL), escape_the_matrix(table)); //  escape?
 	while(i < table->num_philos)
 	{
-		if (pthread_create(&table->philo[i]->thread_id, NULL, &routine, 
+		if (pthread_create(&table->philo[i]->thread_id, NULL, routine, 
 				table->philo[i]))
 			return (printf("%s\n", THREAD_FAIL), escape_the_matrix(table)); // escape?
 		i++;
 	}
 	if (pthread_join(table->monitor_id, NULL))
 		return(printf("%s\n", THREAD_FAIL), escape_the_matrix(table)); // escape?
-	i = 0;
-	while (i < table->num_philos)
+	i = -1;
+	while (++i < table->num_philos)
 	{
-		if (pthread_join(table->philo[i++]->thread_id, NULL))
+		if (pthread_join(table->philo[i]->thread_id, NULL))
 			return(printf("%s\n", THREAD_FAIL), escape_the_matrix(table)); // escape?
 	}
 }

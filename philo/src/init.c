@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 16:29:41 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/25 20:26:26 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:20:29 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	init_input(int ac, char **av, t_table *table)
 	if (ac == 6)
 		table->max_meals = ft_spatoi(av[5]);
 	else
-		table->max_meals = -1;
+		table->max_meals = __INT_MAX__;
 }
 
 /*initialize the table*/
@@ -46,7 +46,7 @@ void	init_table(t_table *table)
 {
 	table->escape = 0;
 	table->meals = 0;
-	
+	table->start_time = timestamp(table);
 	pthread_mutex_init(&(table->mtx_escape), NULL);
 	pthread_mutex_init(&(table->mtx_meals), NULL);
 	pthread_mutex_init(&(table->mtx_print), NULL);
@@ -72,7 +72,7 @@ void	init_forks(t_table *table)
 		if (pthread_mutex_init(table->forks[i], NULL))
 			return(printf("%s", MALLOC_FAIL), clean_table(table), exit(1));
 		i++;
-	}	
+	}
 }
 
 /*Initializes philsophers at table based on number of philosophers,
@@ -97,11 +97,18 @@ void	init_philos(t_table *table)
 		table->philo[i]->time_to_die = table->time_to_die;
 		table->philo[i]->time_to_eat = table->time_to_eat;
 		table->philo[i]->time_to_sleep = table->time_to_sleep;
-		table->philo[i]->left_fork = table->forks[i];
+		table->philo[i]->start_time = table->start_time;
+		table->philo[i]->last_meal_time = table->start_time;
+		table->philo[i]->left_fork = table->forks[i % table->num_philos];
 		if (i == 0)
 			table->philo[i]->right_fork = table->forks[table->num_philos - 1];
 		else
 			table->philo[i]->right_fork = table->forks[i - 1];
+		// table->philo[i]->left_fork = table->forks[i];
+		// table->philo[i]->right_fork = table->forks[(i + 1) % table->num_philos];
 		i++;
 	}
+	// t_mutex *temp = table->philo[0]->right_fork;
+	// table->philo[0]->right_fork = table->philo[0]->left_fork;
+	// table->philo[0]->left_fork = temp;
 }
