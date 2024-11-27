@@ -30,7 +30,7 @@ HEADERS := $(addprefix $(INCDIR)/, philo.h)
 #--- FLAGS ---
 CC := cc
 CFLAGS := -Wall -Wextra -Werror -I$(INCDIR) -g -pthread 
-#-fsanitize=thread
+#-pthread
 
 .PHONY: all clean fclean re
 

@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 22:03:01 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/26 23:19:11 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:42:28 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,6 @@ void	*monitor_routine(void *table_ptr)
 				- _last_meal(table->philo[i]) >= table->time_to_die)
 			{
 				m_print(table->philo[i], DYING);
-				escape_the_matrix(table);
 				return (NULL);
 			}
 			if (check_max_meals(table))
