@@ -6,7 +6,7 @@
 /*   By: wel-safa <wel-safa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 22:03:01 by wel-safa          #+#    #+#             */
-/*   Updated: 2024/11/27 18:42:28 by wel-safa         ###   ########.fr       */
+/*   Updated: 2024/11/27 23:42:03 by wel-safa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ void	eat(t_philo *philo)
 	m_print(philo, EATING);
 	pthread_mutex_lock(&philo->table->mtx_meals);
 	philo->last_meal_time = timestamp(philo->table);
+	philo->table->meals++;
 	pthread_mutex_unlock(&philo->table->mtx_meals);
 	usleep(philo->time_to_eat * 1000);
 	pthread_mutex_lock(&philo->table->mtx_meals);
-	philo->table->meals++;
 	philo->meals++;
 	pthread_mutex_unlock(&philo->table->mtx_meals);
 }
@@ -122,7 +122,7 @@ void	*monitor_routine(void *table_ptr)
 			if (timestamp(table) 
 				- _last_meal(table->philo[i]) >= table->time_to_die)
 			{
-				m_print(table->philo[i], DYING);
+				m_print_death(table->philo[i]);
 				return (NULL);
 			}
 			if (check_max_meals(table))
